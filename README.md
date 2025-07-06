@@ -54,14 +54,9 @@ The trained MobileNetV2 model achieves:
 Performance visualizations and further details are available in the `Main.ipynb`.
 
 ---
-
+  
 ### Prerequisites
 
 - Python 3.12
 - Jupyter Notebook
 - Libraries: TensorFlow/Keras, NumPy, Pandas, Matplotlib, Seaborn, OpenCV
-
-### Contact
-
-For questions or feedback, please reach out to: Gagan Singhal
-LinkedIn: <https://www.linkedin.com/in/singhalgagan/>
