@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Result</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f7f6; color: #333; }
+        .container { max-width: 700px; margin: 40px auto; padding: 30px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        .result-text { font-size: 1.5em; text-align: center; margin-bottom: 15px; }
+        .result-text strong { color: #3498db; }
+        .error-text { font-size: 1.2em; text-align: center; color: #e74c3c; }
+        .custom-message {
+            text-align: center;
+            color: #e67e22; /* Orange for warning/notice */
+            margin-bottom: 15px;
+            font-style: italic;
+            padding: 10px;
+            background-color: #fef9e7;
+            border: 1px solid #f8c471;
+            border-radius: 4px;
+        }
+        .details { margin-top: 20px; padding-top: 20px; border-top: 1px solid #ecf0f1; }
+        .details h3 { color: #34495e; margin-bottom: 10px; }
+        .details ul { list-style-type: none; padding-left: 0; }
+        .details li { margin-bottom: 8px; background-color: #ecf0f1; padding: 8px; border-radius: 4px; }
+        .uploaded-image-container { text-align: center; margin-top: 20px; }
+        .uploaded-image-container img { max-width: 100%; height: auto; max-height: 400px; border: 2px solid #ddd; border-radius: 4px; padding: 5px; }
+        .back-link { display: block; text-align: center; margin-top: 30px; text-decoration: none; color: #3498db; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Detection Result</h1>
+
+        {% if error %}
+            <p class="error-text"><strong>Error:</strong> {{ error }}</p>
+        {% else %}
+            <p class="result-text">The uploaded {{ upload_type }} is predicted as: <strong>{{ prediction_label }}</strong></p>
+
+            {% if custom_message %}
+            <p class="custom-message">{{ custom_message }}</p>
+            {% endif %}
+
+            {% if upload_type == 'image' and probabilities %}
+            <div class="details">
+                <h3>Prediction Probabilities:</h3>
+                <ul>
+                    {% for category, prob in probabilities.items() %}
+                        <li>{{ category }}: {{ "%.2f"|format(prob * 100) }}%</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if filename %}
+            <div class="uploaded-image-container">
+                <h3>Uploaded Image:</h3>
+                <!--
+                    The 'filename' variable passed from app.py should be
+                    like 'uploads/your_image.jpg'.
+                    url_for('static', filename=...) correctly prepends '/static/'
+                    to make it '/static/uploads/your_image.jpg'
+                -->
+                <img src="{{ url_for('static', filename=filename) }}" alt="Uploaded Image">
+            </div>
+            {% endif %}
+            {% endif %}
+
+            {% if upload_type == 'video' and video_counts %}
+            <div class="details">
+                <h3>Video Frame Prediction Counts ({{ total_frames }} frames processed):</h3>
+                <ul>
+                    {% for category, count in video_counts.items() %}
+                        <li>{{ category }}: {{ count }} frames</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        {% endif %}
+
+        <a class="back-link" href="{{ url_for('index') }}">Upload Another File</a>
+    </div>
+</body>
+</html>
